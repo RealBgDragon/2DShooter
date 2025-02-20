@@ -11,14 +11,16 @@ public:
 	Player();
 	~Player();
 
-	void init(int xpos, int ypos, int size, int max_x, int max_y); // May have to add a refference to the game
+	void init(int xpos, int ypos, int size, int max_x, int max_y, int speed); // May have to add a refference to the game
 
 	void draw();
 
 	int getX() { return xpos; }
 	int getY() { return ypos; }
 
-	void move(int x, int y);
+	void move(char direction);
+
+	void shoot(char direction);
 
 private:
 	int xpos;
@@ -27,6 +29,7 @@ private:
 	int color;
 	int max_x;
 	int max_y;
+	int speed;
 
 };
 

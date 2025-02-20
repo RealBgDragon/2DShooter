@@ -15,7 +15,11 @@ Player* player = new Player();
 
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen) {
 
-	player->init(width / 2, height / 2, 32, width, height);
+	int xstart = (width / 2) - ((width / 2) % 32);
+	int ystart = (height / 2) - ((height / 2) % 32);
+	int speed = 16;
+
+	player->init(xstart, ystart, 32, width, height, speed);
 
 	int flags = 0;
 
@@ -51,29 +55,38 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 void Game::handleEvents() {
 	SDL_Event event;
 	SDL_PollEvent(&event);
+	const Uint8* keystates = SDL_GetKeyboardState(NULL);
+
+	if (keystates[SDL_SCANCODE_W]) {
+		player->move('u');   // Move up
+	}
+	if (keystates[SDL_SCANCODE_S]) {
+		player->move('d');    // Move down
+	}
+	if (keystates[SDL_SCANCODE_A]) {
+		player->move('l');   // Move left
+	}
+	if (keystates[SDL_SCANCODE_D]) {
+		player->move('r');    // Move right
+	}
+
+	if (keystates[SDL_SCANCODE_UP]) {
+		player->shoot('u');   // Shoot up
+	}
+	if (keystates[SDL_SCANCODE_DOWN]) {
+		player->shoot('d');    // Shoot down
+	}
+	if (keystates[SDL_SCANCODE_LEFT]) {
+		player->shoot('l');   // Shoot left
+	}
+	if (keystates[SDL_SCANCODE_RIGHT]) {
+		player->shoot('r');    // Shoot right
+	}
 
 	switch (event.type) {
 	case SDL_QUIT:
 		isRunning = false;
 		break;
-
-	case SDL_KEYDOWN:
-		switch (event.key.keysym.sym) {
-		case SDLK_w:
-			player->move(0, -32);   // Move up
-			break;
-		case SDLK_s:
-			player->move(0, 32);    // Move down
-			break;
-		case SDLK_a:
-			player->move(-32, 0);   // Move left
-			break;
-		case SDLK_d:
-			player->move(32, 0);    // Move right
-			break;
-		default:
-			break;
-		}
 
 	default:
 		break;
@@ -81,8 +94,8 @@ void Game::handleEvents() {
 }
 
 void Game::update() {
-	cnt++;
-	std::cout << cnt << std::endl;
+	/*cnt++;
+	std::cout << cnt << std::endl;*/
 }
 
 void Game::render() {
