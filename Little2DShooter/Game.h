@@ -24,6 +24,9 @@ private:
 	int cnt = 0;
 	bool isRunning;
 
+	Uint32 lastMoveTime = 0;
+	const Uint32 moveDelay = 40;
+
 	SDL_Window* window;
 };
 
