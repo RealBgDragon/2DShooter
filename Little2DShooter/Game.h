@@ -27,6 +27,8 @@ private:
 	Uint32 lastMoveTime = 0;
 	const Uint32 moveDelay = 40;
 
+	std::vector<int> projectiles;
+
 	SDL_Window* window;
 };
 

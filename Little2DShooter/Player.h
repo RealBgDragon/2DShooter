@@ -22,6 +22,8 @@ public:
 
 	void shoot(char direction);
 
+	void createProjectile(int xpos, int ypos, char direction);
+
 private:
 	int xpos;
 	int ypos;

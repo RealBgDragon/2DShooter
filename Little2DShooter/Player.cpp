@@ -43,4 +43,9 @@ void Player::move(char direction) {
 
 void Player::shoot(char direction) {
 	std::cout << "Shooting in direction: " << direction << std::endl;
+	createProjectile(xpos, ypos, direction);
+}
+
+void Player::createProjectile(int xpos, int ypos, char direction) {
+	std::cout << "Creating projectile at: " << xpos << ", " << ypos << std::endl;
 }
