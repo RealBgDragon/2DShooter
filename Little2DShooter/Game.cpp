@@ -11,15 +11,14 @@ Game::Game()
 Game::~Game()
 {}
 
-Player* player = new Player();
-
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen) {
+
 
 	int xstart = (width / 2) - ((width / 2) % 32);
 	int ystart = (height / 2) - ((height / 2) % 32);
 	int speed = 16;
 
-	projectiles = {};
+	player = new Player(this);
 
 	player->init(xstart, ystart, 32, width, height, speed);
 
@@ -86,7 +85,7 @@ void Game::handleEvents() {
 		if (keystates[SDL_SCANCODE_UP]) {
 			player->shoot('u');
 			lastMoveTime = currentTime;
-		}	
+		}
 		if (keystates[SDL_SCANCODE_DOWN]) {
 			player->shoot('d');
 			lastMoveTime = currentTime;
@@ -105,6 +104,9 @@ void Game::handleEvents() {
 void Game::update() {
 	/*cnt++;
 	std::cout << cnt << std::endl;*/
+	for (Projectile& projectile : projectiles) {  // Iterates directly over each projectile
+		projectile.move();
+	}
 }
 
 void Game::render() {
@@ -112,11 +114,17 @@ void Game::render() {
 	SDL_RenderClear(renderer);
 
 	player->draw();
+	for (Projectile& projectile : projectiles) {  // Iterates directly over each projectile
+		projectile.draw();
+	}
 
 	SDL_RenderPresent(renderer);
 }
 
 void Game::clean() {
+	delete player; // Free player memory
+	player = nullptr;
+
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
 	SDL_Quit();

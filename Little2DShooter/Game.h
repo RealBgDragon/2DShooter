@@ -3,7 +3,8 @@
 #include "SDL_image.h"
 #include <iostream>
 #include <vector>
-#include <string>
+#include "Projectile.h"
+#include "Player.h"
 
 class Game
 {
@@ -23,14 +24,16 @@ public:
 
 	static SDL_Renderer* renderer;
 
-	std::vector<std::string> projectiles;
+	Player* player;
+
+	std::vector<Projectile> projectiles;
 
 private:
 	int cnt = 0;
 	bool isRunning;
 
 	Uint32 lastMoveTime = 0;
-	const Uint32 moveDelay = 40;
+	const Uint32 moveDelay = 50;
 
 
 	SDL_Window* window;

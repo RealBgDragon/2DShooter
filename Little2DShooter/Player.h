@@ -1,15 +1,16 @@
 #pragma once
 #include "SDL.h"
 #include "SDL_image.h"
-#include "Game.h"
 #include <iostream>
 #include <vector>
+
+class Game;
 
 class Player
 {
 
 public:
-	Player();
+	Player(Game* game);
 	~Player();
 
 	void init(int xpos, int ypos, int size, int max_x, int max_y, int speed); // May have to add a refference to the game
@@ -34,7 +35,7 @@ private:
 	int max_y;
 	int speed;
 
-	Game game;
+	Game* game; // needs to be a pointer to the game object. If its an object, it will create a new game object
 
 };
 
