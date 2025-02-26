@@ -19,6 +19,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	int ystart = (height / 2) - ((height / 2) % 32);
 	int speed = 16;
 
+	projectiles = {};
+
 	player->init(xstart, ystart, 32, width, height, speed);
 
 	int flags = 0;

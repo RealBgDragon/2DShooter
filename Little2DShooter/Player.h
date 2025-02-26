@@ -1,6 +1,7 @@
 #pragma once
 #include "SDL.h"
 #include "SDL_image.h"
+#include "Game.h"
 #include <iostream>
 #include <vector>
 
@@ -32,6 +33,8 @@ private:
 	int max_x;
 	int max_y;
 	int speed;
+
+	Game game;
 
 };
 

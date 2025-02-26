@@ -2,6 +2,9 @@
 #include "SDL.h"
 #include "SDL_image.h"
 #include <iostream>
+#include <vector>
+#include <string>
+
 class Game
 {
 
@@ -20,6 +23,8 @@ public:
 
 	static SDL_Renderer* renderer;
 
+	std::vector<std::string> projectiles;
+
 private:
 	int cnt = 0;
 	bool isRunning;
@@ -27,7 +32,6 @@ private:
 	Uint32 lastMoveTime = 0;
 	const Uint32 moveDelay = 40;
 
-	std::vector<int> projectiles;
 
 	SDL_Window* window;
 };

@@ -1,6 +1,8 @@
 #include "Player.h"
 #include "Game.h"
 #include <iostream>
+#include <string>
+#include <vector>
 
 Player::Player()
 {}
@@ -15,6 +17,8 @@ void Player::init(int xpos, int ypos, int size, int max_x, int max_y, int speed)
 	this->max_x = max_x;
 	this->max_y = max_y;
 	this->speed = speed;
+
+	Game game;
 }
 
 void Player::draw() {
@@ -47,5 +51,11 @@ void Player::shoot(char direction) {
 }
 
 void Player::createProjectile(int xpos, int ypos, char direction) {
+	std::string proj = "Projectile x: " + std::to_string(xpos) + " y: " + std::to_string(ypos) + " direction: " + direction;
+	game.projectiles.push_back(proj);
+
+	for (int i = 0; i < game.projectiles.size(); i++) {
+		std::cout << game.projectiles[i] << std::endl;
+	}
 	std::cout << "Creating projectile at: " << xpos << ", " << ypos << std::endl;
 }
