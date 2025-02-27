@@ -15,6 +15,8 @@ public:
 	int getX() { return xpos; }
 	int getY() { return ypos; }
 
+	int getSize() { return size; } // temporary
+
 	void move();
 
 private:

@@ -20,6 +20,8 @@ public:
 
 	void moveAi();
 
+	int getSize() { return size; } // temporary
+
 	//void shoot(char direction);
 
 	//void createProjectile(int xpos, int ypos, char direction);
@@ -36,7 +38,7 @@ private:
 	Uint32 lastMoveTime = 0;
 	const Uint32 moveDelay = 50;
 
-	char direction;	
+	char direction;
 
 	Player* player;
 };

@@ -4,7 +4,6 @@
 
 SDL_Renderer* Game::renderer = nullptr;
 
-
 Game::Game()
 {}
 
@@ -13,10 +12,11 @@ Game::~Game()
 
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen) {
 
+	this->width = width;
+	this->height = height;
 
 	int xstart = (width / 2) - ((width / 2) % 32);
 	int ystart = (height / 2) - ((height / 2) % 32);
-	int speed = 16;
 
 	player = new Player(this);
 	enemy = new Enemy(player);
@@ -54,6 +54,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	}
 
 }
+
+
 
 void Game::handleEvents() {
 	SDL_Event event;
@@ -105,13 +107,29 @@ void Game::handleEvents() {
 }
 
 void Game::update() {
-	/*cnt++;
-	std::cout << cnt << std::endl;*/
+	int currentTime = SDL_GetTicks();
+	if (isEnemyAlive) {
+		if (hitReg(player, enemy)) {
+			isRunning = false;
+		}
+	}
+
+	if (isEnemyAlive) {
+		enemy->moveAi();
+	}
+
 	if (!projectiles.empty()) {
 		for (auto it = projectiles.begin(); it != projectiles.end(); ) {
 			it->move();
 
-			if (it->getX() <= 0 || it->getX() >= 800 ||
+			if (isEnemyAlive && hitReg(&(*it), enemy)) {
+				isEnemyAlive = false;
+				delete enemy;  // Free enemy memory
+				enemy = nullptr;
+				deadTime = currentTime;
+				it = projectiles.erase(it);  // Erase and get next valid iterator
+			}
+			else if (it->getX() <= 0 || it->getX() >= 800 ||
 				it->getY() <= 0 || it->getY() >= 640) {
 
 				it = projectiles.erase(it);  // Erase and get next valid iterator
@@ -122,7 +140,14 @@ void Game::update() {
 		}
 	}
 
-	enemy->moveAi();
+	if (!isEnemyAlive) {
+		if (currentTime - deadTime > respawnTime) {
+			enemy = new Enemy(player);
+			enemy->init(0, 0, 32, width, height, speed);
+			isEnemyAlive = true;
+		}
+	}
+
 }
 
 void Game::render() {
@@ -130,7 +155,9 @@ void Game::render() {
 	SDL_RenderClear(renderer);
 
 	player->draw();
-	enemy->draw();
+	if (isEnemyAlive) {
+		enemy->draw();
+	}
 	for (Projectile& projectile : projectiles) {  // Iterates directly over each projectile
 		projectile.draw();
 	}
