@@ -19,8 +19,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	int speed = 16;
 
 	player = new Player(this);
+	enemy = new Enemy(player);
 
 	player->init(xstart, ystart, 32, width, height, speed);
+	enemy->init(0, 0, 32, width, height, speed);
 
 	int flags = 0;
 
@@ -63,8 +65,8 @@ void Game::handleEvents() {
 	}
 
 	Uint32 currentTime = SDL_GetTicks();
+	const Uint8* keystates = SDL_GetKeyboardState(NULL);
 	if (currentTime - lastMoveTime > moveDelay) {
-		const Uint8* keystates = SDL_GetKeyboardState(NULL);
 		if (keystates[SDL_SCANCODE_W]) {
 			player->move('u');
 			lastMoveTime = currentTime;
@@ -81,22 +83,23 @@ void Game::handleEvents() {
 			player->move('r');
 			lastMoveTime = currentTime;
 		}
-
+	}
+	if (currentTime - lastShootTime > shootDelay) {
 		if (keystates[SDL_SCANCODE_UP]) {
 			player->shoot('u');
-			lastMoveTime = currentTime;
+			lastShootTime = currentTime;
 		}
 		if (keystates[SDL_SCANCODE_DOWN]) {
 			player->shoot('d');
-			lastMoveTime = currentTime;
+			lastShootTime = currentTime;
 		}
 		if (keystates[SDL_SCANCODE_LEFT]) {
 			player->shoot('l');
-			lastMoveTime = currentTime;
+			lastShootTime = currentTime;
 		}
 		if (keystates[SDL_SCANCODE_RIGHT]) {
 			player->shoot('r');
-			lastMoveTime = currentTime;
+			lastShootTime = currentTime;
 		}
 	}
 }
@@ -104,9 +107,22 @@ void Game::handleEvents() {
 void Game::update() {
 	/*cnt++;
 	std::cout << cnt << std::endl;*/
-	for (Projectile& projectile : projectiles) {  // Iterates directly over each projectile
-		projectile.move();
+	if (!projectiles.empty()) {
+		for (auto it = projectiles.begin(); it != projectiles.end(); ) {
+			it->move();
+
+			if (it->getX() <= 0 || it->getX() >= 800 ||
+				it->getY() <= 0 || it->getY() >= 640) {
+
+				it = projectiles.erase(it);  // Erase and get next valid iterator
+			}
+			else {
+				++it;  // Move iterator forward only if no erase happened
+			}
+		}
 	}
+
+	enemy->moveAi();
 }
 
 void Game::render() {
@@ -114,8 +130,17 @@ void Game::render() {
 	SDL_RenderClear(renderer);
 
 	player->draw();
+	enemy->draw();
 	for (Projectile& projectile : projectiles) {  // Iterates directly over each projectile
 		projectile.draw();
+	}
+
+	frameCount++;
+	int currentTime = SDL_GetTicks();
+	if (currentTime > lastTime + 1000) {  // Update every second
+		std::cout << "FPS: " << frameCount << std::endl;
+		lastTime = currentTime;
+		frameCount = 0;
 	}
 
 	SDL_RenderPresent(renderer);
@@ -124,6 +149,8 @@ void Game::render() {
 void Game::clean() {
 	delete player; // Free player memory
 	player = nullptr;
+	delete enemy; // Free enemy memory
+	enemy = nullptr;
 
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);

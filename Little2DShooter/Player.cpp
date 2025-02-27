@@ -55,8 +55,5 @@ void Player::createProjectile(int xpos, int ypos, char direction) {
 	projectile.init(xpos, ypos, size, max_x, max_y, direction, speed);
 	game->projectiles.emplace_back(projectile);
 
-	/*for (int i = 0; i < game.projectiles.size(); i++) {
-		std::cout << game.projectiles[i] << std::endl;
-	}*/
 	std::cout << "Creating projectile at: " << xpos << ", " << ypos << std::endl;
 }

@@ -1,5 +1,6 @@
 #include "Projectile.h"
 #include "Game.h"
+#include <vector>
 
 Projectile::Projectile()
 {
