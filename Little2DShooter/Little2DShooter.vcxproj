@@ -104,13 +104,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Martin\Desktop\Mycraft\SDL2\include;C:\Users\Martin\Desktop\Mycraft\SDL2_image\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Martin\Desktop\Mycraft\SDL2\include;C:\Users\Martin\Desktop\Mycraft\SDL2_image\include;C:\Users\Martin\Desktop\Mycraft\SDL2_ttf-2.24.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\Martin\Desktop\Mycraft\SDL2\lib\x64;C:\Users\Martin\Desktop\Mycraft\SDL2_image\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Users\Martin\Desktop\Mycraft\SDL2\lib\x64;C:\Users\Martin\Desktop\Mycraft\SDL2_image\lib\x64;C:\Users\Martin\Desktop\Mycraft\SDL2_ttf-2.24.0\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -132,12 +132,14 @@
   <ItemGroup>
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="GameOverScreen.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Projectile.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="GameOverScreen.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Projectile.cpp" />

@@ -27,6 +27,9 @@
     <ClInclude Include="Enemy.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="GameOverScreen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp">
@@ -42,6 +45,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Enemy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GameOverScreen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

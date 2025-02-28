@@ -23,7 +23,6 @@ void Player::init(int xpos, int ypos, int size, int max_x, int max_y, int speed)
 
 void Player::draw() {
 	SDL_SetRenderDrawColor(Game::renderer, 0, 255, 0, 255);
-	//std::cout << "Drawing player at: " << xpos << ", " << ypos << " " << size << std::endl;
 	SDL_Rect rect = { xpos, ypos, size, size };
 	SDL_RenderFillRect(Game::renderer, &rect);
 }

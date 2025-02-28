@@ -1,11 +1,14 @@
 #pragma once
 #include "SDL.h"
 #include "SDL_image.h"
+#include "SDL_ttf.h"
 #include <iostream>
 #include <vector>
+#include <string>
 #include "Projectile.h"
 #include "Player.h"
 #include "Enemy.h"
+#include "GameOverScreen.h"
 
 class Game
 {
@@ -22,6 +25,8 @@ public:
 	void clean();
 
 	bool running() { return isRunning; }
+
+	void renderScore();
 
 	static SDL_Renderer* renderer;
 
@@ -46,9 +51,17 @@ public:
 			(y1 < y2 + h2) && (y1 + h1 > y2);
 	}
 
+	void projectileHitReg(Uint32 currnetTime);
+
 private:
 	int cnt = 0;
 	bool isRunning;
+	bool isGameOver = false;
+
+	TTF_Font* font;
+	SDL_Texture* scoreTexture;
+	SDL_Rect scoreRect;
+	int score = 0;
 
 	Uint32 frameStart;
 	int frameTime;
@@ -66,7 +79,12 @@ private:
 	int width;
 	int height;
 	int speed = 16;
+	int enemyXStart = 0;
+	int enemyYStart = 0;
+	int size = 32;
 
 	SDL_Window* window;
+
+	GameOverScreen* gameOverScreen;
 };
 
