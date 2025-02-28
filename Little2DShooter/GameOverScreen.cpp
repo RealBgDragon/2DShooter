@@ -25,11 +25,11 @@ void GameOverScreen::init(SDL_Renderer* renderer, TTF_Font* font, int width, int
 		std::cout << "Failed to create texture: " << SDL_GetError() << std::endl;
 	}
 
-	messageRect.x = width / 2 - 150;
-	messageRect.y = height / 2 - 100;
-	messageRect.w = 300;
-	messageRect.h = 200;
-	
+	messageRect.x = width / 2 - 300;
+	messageRect.y = height / 2 - 200;
+	messageRect.w = 600;
+	messageRect.h = 300;
+
 	SDL_FreeSurface(surface);
 }
 

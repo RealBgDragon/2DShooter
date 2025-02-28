@@ -205,6 +205,9 @@ void Game::render() {
 			gameOverScreen->init(renderer, font, width, height);
 		}
 		renderScore();
+		if (scoreTexture) {
+			SDL_RenderCopy(renderer, scoreTexture, NULL, &scoreRect);
+		}
 		gameOverScreen->draw();
 		SDL_RenderPresent(renderer);
 		return;
