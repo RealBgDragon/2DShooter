@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "GameOverScreen.h"
+#include "PowerUp.h"
 
 class Game
 {
@@ -34,6 +35,7 @@ public:
 	Enemy* enemy;
 
 	std::vector<Projectile> projectiles;
+	std::vector<PowerUp> powerUps;
 
 	template <typename Obj1, typename Obj2>
 	bool hitReg(Obj1* obj1, Obj2* obj2) {
@@ -53,10 +55,16 @@ public:
 
 	void projectileHitReg(Uint32 currnetTime);
 
+	void spawnPowerUp();
+
+	void powerUpHitReg();
+
 private:
 	int cnt = 0;
 	bool isRunning;
 	bool isGameOver = false;
+
+	SDL_Texture* player_tex;
 
 	TTF_Font* font;
 	SDL_Texture* scoreTexture;
@@ -68,13 +76,18 @@ private:
 	int lastTime = 0, frameCount = 0;
 
 	Uint32 lastMoveTime = 0;
-	Uint32 lastShootTime = 0;
 	const Uint32 moveDelay = 50;
+
+	Uint32 lastShootTime = 0;
 	const Uint32 shootDelay = 500;
 
-	bool isEnemyAlive = true;
 	Uint32 deadTime = 0;
 	Uint32 respawnTime = 500;
+
+	Uint32 lastPowerUpTime = 0;
+	const Uint32 powerUpDelay = 5000;
+
+	bool isEnemyAlive = true;
 
 	int width;
 	int height;

@@ -13,7 +13,7 @@ public:
 	Player(Game* game);
 	~Player();
 
-	void init(int xpos, int ypos, int size, int max_x, int max_y, int speed); // May have to add a refference to the game
+	void init(int xpos, int ypos, int size, int max_x, int max_y, int speed, SDL_Texture* player_tex); // May have to add a refference to the game
 
 	void draw();
 
@@ -36,8 +36,10 @@ private:
 	int max_x;
 	int max_y;
 	int speed;
+	int angle = 0;
 
 	Game* game; // needs to be a pointer to the game object. If its an object, it will create a new game object
+	SDL_Texture* player_tex;
 
 };
 
