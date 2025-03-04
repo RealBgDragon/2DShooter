@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
 
 	game = new Game();
 
-	game->init("Little2DShooter", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 640, false);
+	game->init("Little2DShooter", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1920, 1080, false);
 
 	while (game->running()) {
 
@@ -31,8 +31,11 @@ int main(int argc, char* argv[]) {
 		}
 	}
 
-	
+	if (game) {
+		game->clean();
+		delete game;
+		game = nullptr;
+	}
 
-	game->clean();
 	return 0;
 }

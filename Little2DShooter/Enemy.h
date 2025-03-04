@@ -37,7 +37,7 @@ private:
 	int speed;
 
 	Uint32 lastMoveTime = 0;
-	const Uint32 moveDelay = 50;
+	const Uint32 moveDelay = 40;
 
 	char direction;
 

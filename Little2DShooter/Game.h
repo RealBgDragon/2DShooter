@@ -10,6 +10,7 @@
 #include "Enemy.h"
 #include "GameOverScreen.h"
 #include "PowerUp.h"
+#include "map"
 
 class Game
 {
@@ -19,6 +20,8 @@ public:
 	~Game();
 
 	void init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen);
+
+	void textureInit();
 
 	void handleEvents();
 	void update();
@@ -65,6 +68,8 @@ private:
 	bool isGameOver = false;
 
 	SDL_Texture* player_tex;
+	SDL_Texture* bullet_tex;
+	std::map<std::string, SDL_Texture*> powerUpTextures;
 
 	TTF_Font* font;
 	SDL_Texture* scoreTexture;
@@ -76,7 +81,7 @@ private:
 	int lastTime = 0, frameCount = 0;
 
 	Uint32 lastMoveTime = 0;
-	const Uint32 moveDelay = 50;
+	const Uint32 moveDelay = 25;
 
 	Uint32 lastShootTime = 0;
 	const Uint32 shootDelay = 500;
@@ -86,15 +91,18 @@ private:
 
 	Uint32 lastPowerUpTime = 0;
 	const Uint32 powerUpDelay = 5000;
+	const Uint32 powerUpLifetime = 5000;
+
+	std::array<std::string, 3> powerUpTypes = { "shot_size", "player_speed", "shot_speed"};
 
 	bool isEnemyAlive = true;
 
 	int width;
 	int height;
-	int speed = 16;
+	int speed = 32;
 	int enemyXStart = 0;
 	int enemyYStart = 0;
-	int size = 32;
+	int size = 64;
 
 	SDL_Window* window;
 

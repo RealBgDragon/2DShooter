@@ -11,8 +11,8 @@ Game::~Game()
 
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen) {
 
-	this->width = width;
-	this->height = height;
+	this->width = width - 32;
+	this->height = height - 32;
 
 	int xstart = (width / 2) - ((width / 2) % size);
 	int ystart = (height / 2) - ((height / 2) % size);
@@ -24,9 +24,6 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	player = new Player(this);
 	enemy = new Enemy(player);
-
-	/*player->init(xstart, ystart, size, width, height, speed);
-	enemy->init(enemyXStart, enemyYStart, size, width, height, speed);*/
 
 	int flags = 0;
 
@@ -58,17 +55,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	}
 
 	// Player image
-	SDL_Surface* player_sur = IMG_Load("C:\\Users\\Martin\\Desktop\\Mycraft\\Player.png");
-	if (player_sur == NULL) {
-		std::cout << "Error loading image: " << IMG_GetError();
-	}
+	textureInit();
 
-	SDL_Texture* player_tex = SDL_CreateTextureFromSurface(renderer, player_sur);
-
-	SDL_FreeSurface(player_sur);
-
-	player->init(xstart, ystart, size, width, height, speed, player_tex);
-	enemy->init(enemyXStart, enemyYStart, size, width, height, speed);
+	player->init(xstart, ystart, size, this->width, this->height, speed, player_tex);
+	enemy->init(enemyXStart, enemyYStart, size, this->width, this->height, speed);
 
 	if (TTF_Init() == -1) {
 		std::cout << "Failed to initialize SDL_ttf: " << TTF_GetError() << std::endl;
@@ -79,6 +69,30 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		std::cout << "Failed to load font: " << TTF_GetError() << std::endl;
 	}
 
+
+}
+
+void Game::textureInit() {
+	SDL_Surface* player_sur = IMG_Load("C:\\Users\\Martin\\Desktop\\Mycraft\\Player.png");  // Player model
+	player_tex = SDL_CreateTextureFromSurface(renderer, player_sur);
+	SDL_FreeSurface(player_sur);
+
+	SDL_Surface* bullet_sur = IMG_Load("C:\\Users\\Martin\\Desktop\\Mycraft\\bullet.png");	// Projectile model
+	bullet_tex = SDL_CreateTextureFromSurface(renderer, bullet_sur);
+	SDL_FreeSurface(bullet_sur);
+
+
+	SDL_Surface* tempSurface = IMG_Load("C:\\Users\\Martin\\Desktop\\Mycraft\\shot_size_powerup.png");
+	powerUpTextures["shot_size"] = SDL_CreateTextureFromSurface(renderer, tempSurface);
+	SDL_FreeSurface(tempSurface);
+
+	tempSurface = IMG_Load("C:\\Users\\Martin\\Desktop\\Mycraft\\movement_speed.png");
+	powerUpTextures["player_speed"] = SDL_CreateTextureFromSurface(renderer, tempSurface);
+	SDL_FreeSurface(tempSurface);
+
+	/*tempSurface = IMG_Load("C:\\Users\\Martin\\Desktop\\Mycraft\\shot_speed.png");
+	powerUpTextures["shot_speed"] = SDL_CreateTextureFromSurface(renderer, tempSurface);
+	SDL_FreeSurface(tempSurface);*/
 
 }
 
@@ -97,8 +111,8 @@ void Game::projectileHitReg(Uint32 currentTime) {
 				deadTime = currentTime;
 				it = projectiles.erase(it);  // Erase and get next valid iterator
 			}
-			else if (it->getX() <= 0 || it->getX() >= 800 ||
-				it->getY() <= 0 || it->getY() >= 640) {
+			else if (it->getX() <= 0 || it->getX() >= width ||
+				it->getY() <= 0 || it->getY() >= height) {
 
 				it = projectiles.erase(it);  // Erase and get next valid iterator
 			}
@@ -113,7 +127,7 @@ void Game::powerUpHitReg() {
 	if (!powerUps.empty()) {
 		for (auto it = powerUps.begin(); it != powerUps.end(); ) {
 			if (hitReg(player, &(*it))) {
-				it->addEffect();
+				it->addEffect(player);
 				std::cout << "Power up collected" << std::endl;
 				it = powerUps.erase(it);  // Erase and get next valid iterator
 			}
@@ -129,10 +143,12 @@ void Game::spawnPowerUp() {
 	PowerUp powerUp;
 	int powerUpXStart, powerUpYStart;
 	do {
-		powerUpXStart = (rand() % (height / size)) * size;
-		powerUpYStart = (rand() % (width / size)) * size;
+		powerUpXStart = (rand() % (width / size)) * size;
+		powerUpYStart = (rand() % (height / size)) * size;
 	} while (abs(powerUpXStart - player->getX()) < 100 || abs(powerUpYStart - player->getY()) < 100);
-	powerUp.init(powerUpXStart, powerUpYStart, size);
+	int random = rand() % powerUpTypes.size();
+	std::string powerUpType = powerUpTypes[random];
+	powerUp.init(powerUpXStart, powerUpYStart, size, speed, powerUpType, powerUpTextures[powerUpType]);
 	powerUps.emplace_back(powerUp);
 
 	std::cout << "Creating power up at: " << powerUp.getX() << ", " << powerUp.getY() << std::endl;
@@ -170,6 +186,8 @@ void Game::handleEvents() {
 	while (SDL_PollEvent(&event)) {
 		if (event.type == SDL_QUIT) {
 			isRunning = false;
+		} else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {
+			isRunning = false;
 		}
 	}
 
@@ -195,19 +213,19 @@ void Game::handleEvents() {
 	}
 	if (currentTime - lastShootTime > shootDelay) {
 		if (keystates[SDL_SCANCODE_UP]) {
-			player->shoot('u');
+			player->shoot('u', bullet_tex);
 			lastShootTime = currentTime;
 		}
 		if (keystates[SDL_SCANCODE_DOWN]) {
-			player->shoot('d');
+			player->shoot('d', bullet_tex);
 			lastShootTime = currentTime;
 		}
 		if (keystates[SDL_SCANCODE_LEFT]) {
-			player->shoot('l');
+			player->shoot('l', bullet_tex);
 			lastShootTime = currentTime;
 		}
 		if (keystates[SDL_SCANCODE_RIGHT]) {
-			player->shoot('r');
+			player->shoot('r', bullet_tex);
 			lastShootTime = currentTime;
 		}
 	}
@@ -230,6 +248,8 @@ void Game::update() {
 
 		projectileHitReg(currentTime);
 		powerUpHitReg();
+		player->update(currentTime);
+		
 
 		if (currentTime - lastPowerUpTime > powerUpDelay) {
 			spawnPowerUp();
@@ -239,12 +259,11 @@ void Game::update() {
 		if (!isEnemyAlive) {
 			if (currentTime - deadTime > respawnTime) {
 				do {
-					enemyXStart = (rand() % (height / size)) * size;
-					enemyYStart = (rand() % (width / size)) * size;
+					enemyXStart = (rand() % (width / size)) * size;
+					enemyYStart = (rand() % (height / size)) * size;
 				} while (abs(enemyXStart - player->getX()) < 100 || abs(enemyYStart - player->getY()) < 100);
-				//std::cout << "Respawning enemy at: " << enemyXStart << ", " << enemyYStart << std::endl;
 				enemy = new Enemy(player);
-				enemy->init(enemyYStart, enemyXStart, size, width, height, speed);
+				enemy->init(enemyXStart, enemyYStart, size, width, height, speed);
 				isEnemyAlive = true;
 			}
 		}
@@ -300,20 +319,44 @@ void Game::render() {
 }
 
 void Game::clean() {
-	delete player; // Free player memory
-	player = nullptr;
-	delete enemy; // Free enemy memory
-	enemy = nullptr;
-	delete gameOverScreen; // Free enemy memory
-	gameOverScreen = nullptr;
-
-	SDL_DestroyWindow(window);
-	SDL_DestroyRenderer(renderer);
+	if (player) {
+		delete player; // Free player memory
+		player = nullptr;
+	}
+	if (enemy) {
+		delete enemy; // Free enemy memory
+		enemy = nullptr;
+	}
+	if (gameOverScreen) {
+		delete gameOverScreen; // Free gameOverScreen memory
+		gameOverScreen = nullptr;
+	}
+	if (window) {
+		SDL_DestroyWindow(window);
+		window = nullptr;
+	}
+	if (renderer) {
+		SDL_DestroyRenderer(renderer);
+		renderer = nullptr;
+	}
+	if (font) {
+		TTF_CloseFont(font);
+		font = nullptr;
+	}
+	if (scoreTexture) {
+		SDL_DestroyTexture(scoreTexture);
+		scoreTexture = nullptr;
+	}
+	if (player_tex) {
+		SDL_DestroyTexture(player_tex);
+		player_tex = nullptr;
+	}
+	if (bullet_tex) {
+		SDL_DestroyTexture(bullet_tex);
+		bullet_tex = nullptr;
+	}
+	// Quit SDL subsystems
 	TTF_Quit();
-	TTF_CloseFont(font);
-	SDL_DestroyTexture(scoreTexture);
-	SDL_DestroyTexture(player_tex);
-
 	SDL_Quit();
 	std::cout << "Game Cleaned..." << std::endl;
 }

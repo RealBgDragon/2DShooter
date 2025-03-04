@@ -20,13 +20,24 @@ public:
 	int getX() { return xpos; }
 	int getY() { return ypos; }
 
+	void setShotSize(int newSize) { shotSize = newSize; }
+
+	void setSpeed(int newSpeed) { speed = newSpeed; }
+
 	int getSize() { return size; } // temporary
 
 	void move(char direction);
 
-	void shoot(char direction);
+	void shoot(char direction, SDL_Texture* bullet_tex);
 
-	void createProjectile(int xpos, int ypos, char direction);
+	void update(Uint32 currentTime);
+
+	struct ActivePowerUp {
+		std::string type;
+		Uint32 expirationTime;
+	};
+
+	std::vector<ActivePowerUp> activePowerUps;
 
 private:
 	int xpos;
@@ -36,7 +47,11 @@ private:
 	int max_x;
 	int max_y;
 	int speed;
+	int startSpeed;
+	int startShotSize;
+	int shotSize;
 	int angle = 0;
+
 
 	Game* game; // needs to be a pointer to the game object. If its an object, it will create a new game object
 	SDL_Texture* player_tex;

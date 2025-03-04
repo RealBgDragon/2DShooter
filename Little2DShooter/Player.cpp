@@ -18,7 +18,10 @@ void Player::init(int xpos, int ypos, int size, int max_x, int max_y, int speed,
 	this->size = size;
 	this->max_x = max_x;
 	this->max_y = max_y;
+	this->startSpeed = speed;
 	this->speed = speed;
+	this->startShotSize = size;
+	this->shotSize = size;
 	this->player_tex = player_tex;
 }
 
@@ -50,15 +53,43 @@ void Player::move(char direction) {
 
 }
 
-void Player::shoot(char direction) {
-	//std::cout << "Shooting in direction: " << direction << std::endl;
-	createProjectile(xpos, ypos, direction);
+void Player::shoot(char direction, SDL_Texture* bullet_tex) {
+	Projectile projectile;
+	projectile.init(xpos, ypos, shotSize, max_x, max_y, direction, speed, bullet_tex);
+	game->projectiles.emplace_back(projectile);
 }
 
-void Player::createProjectile(int xpos, int ypos, char direction) {
-	Projectile projectile;
-	projectile.init(xpos, ypos, size, max_x, max_y, direction, speed);
-	game->projectiles.emplace_back(projectile);
+void Player::update(Uint32 currentTime) {
+	int speedCount = 0;
+	int shotCount = 0;
+	int shotSpeedCount = 0;
+	for (auto it = activePowerUps.begin(); it != activePowerUps.end(); ) {
+		if (currentTime >= it->expirationTime) {
 
-	//std::cout << "Creating projectile at: " << xpos << ", " << ypos << std::endl;
+			if (it->type == "player_speed") {
+				speedCount++;
+				//speed = startSpeed;
+			}
+			else if (it->type == "shot_size") {
+				shotCount++;
+				//shotSize = startShotSize;
+			}
+			else if (it->type == "shot_speed") {
+				shotSpeedCount++;
+			}
+
+			it = activePowerUps.erase(it);  // Remove and get next valid iterator
+		}
+		else {
+			++it;
+		}
+	}
+	if (speedCount == 1) {
+		speed = startSpeed;
+	}
+	if (shotCount == 1) {
+		shotSize = startShotSize;
+	}
+
+	//TODO find a solution (the new powerup dissapears alongside the old)
 }
