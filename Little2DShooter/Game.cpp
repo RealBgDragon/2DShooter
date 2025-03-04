@@ -90,9 +90,9 @@ void Game::textureInit() {
 	powerUpTextures["player_speed"] = SDL_CreateTextureFromSurface(renderer, tempSurface);
 	SDL_FreeSurface(tempSurface);
 
-	/*tempSurface = IMG_Load("C:\\Users\\Martin\\Desktop\\Mycraft\\shot_speed.png");
+	tempSurface = IMG_Load("C:\\Users\\Martin\\Desktop\\Mycraft\\shot_speed.png");
 	powerUpTextures["shot_speed"] = SDL_CreateTextureFromSurface(renderer, tempSurface);
-	SDL_FreeSurface(tempSurface);*/
+	SDL_FreeSurface(tempSurface);
 
 }
 
