@@ -1,6 +1,5 @@
 #include "Game.h"
 
-
 SDL_Renderer* Game::renderer = nullptr;
 
 Game::Game()
@@ -186,7 +185,8 @@ void Game::handleEvents() {
 	while (SDL_PollEvent(&event)) {
 		if (event.type == SDL_QUIT) {
 			isRunning = false;
-		} else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {
+		}
+		else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {
 			isRunning = false;
 		}
 	}
@@ -216,15 +216,15 @@ void Game::handleEvents() {
 			player->shoot('u', bullet_tex);
 			lastShootTime = currentTime;
 		}
-		if (keystates[SDL_SCANCODE_DOWN]) {
+		else if (keystates[SDL_SCANCODE_DOWN]) {
 			player->shoot('d', bullet_tex);
 			lastShootTime = currentTime;
 		}
-		if (keystates[SDL_SCANCODE_LEFT]) {
+		else if (keystates[SDL_SCANCODE_LEFT]) {
 			player->shoot('l', bullet_tex);
 			lastShootTime = currentTime;
 		}
-		if (keystates[SDL_SCANCODE_RIGHT]) {
+		else if (keystates[SDL_SCANCODE_RIGHT]) {
 			player->shoot('r', bullet_tex);
 			lastShootTime = currentTime;
 		}
@@ -237,19 +237,18 @@ void Game::update() {
 		Uint32 currentTime = SDL_GetTicks();
 		if (isEnemyAlive) {
 			if (hitReg(player, enemy)) {
-				//isRunning = false;
 				isGameOver = true;
 			}
 		}
 
 		if (isEnemyAlive) {
-			enemy->moveAi();
+			enemy->moveAi();	// Enemy movement ai
 		}
 
 		projectileHitReg(currentTime);
 		powerUpHitReg();
 		player->update(currentTime);
-		
+
 
 		if (currentTime - lastPowerUpTime > powerUpDelay) {
 			spawnPowerUp();

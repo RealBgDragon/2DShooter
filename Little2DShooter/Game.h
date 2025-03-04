@@ -93,16 +93,16 @@ private:
 	const Uint32 powerUpDelay = 5000;
 	const Uint32 powerUpLifetime = 5000;
 
-	std::array<std::string, 3> powerUpTypes = { "shot_size", "player_speed", "shot_speed"};
+	std::array<std::string, 3> powerUpTypes = { "shot_size", "player_speed", "shot_speed" };
 
 	bool isEnemyAlive = true;
 
 	int width;
 	int height;
-	int speed = 32;
+	int speed = 16;
 	int enemyXStart = 0;
 	int enemyYStart = 0;
-	int size = 64;
+	int size = 32;
 
 	SDL_Window* window;
 
