@@ -13,7 +13,7 @@ public:
 	Player(Game* game);
 	~Player();
 
-	void init(int xpos, int ypos, int size, int max_x, int max_y, int speed, SDL_Texture* player_tex); // May have to add a refference to the game
+	void init(int xpos, int ypos, int size, int max_x, int max_y, int speed, SDL_Texture* player_tex);
 
 	void draw();
 
