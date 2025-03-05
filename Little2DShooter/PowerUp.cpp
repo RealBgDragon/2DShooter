@@ -44,6 +44,6 @@ void PowerUp::addEffect(Player* player) {
 	else if (powerupType == "shot_speed") {
 		std::cout << "Shot speed powerup collected" << std::endl;
 		player->activePowerUps.push_back({ powerupType, SDL_GetTicks() + duration });
-		//TODO add this
+		player->setShootDelay(player->getShootDelay() / 2);
 	}
 }

@@ -24,11 +24,14 @@ public:
 
 	void setSpeed(int newSpeed) { speed = newSpeed; }
 
+	void setShootDelay(int newShootDelay) { shootDelay = newShootDelay; }
+	Uint32 getShootDelay() { return shootDelay; }
+
 	int getSize() { return size; } // temporary
 
 	void move(char direction);
 
-	void shoot(char direction, SDL_Texture* bullet_tex);
+	void shoot(char direction, SDL_Texture* bullet_tex, Uint32 currentTime);
 
 	void update(Uint32 currentTime);
 
@@ -51,6 +54,9 @@ private:
 	int startShotSize;
 	int shotSize;
 	int angle = 0;
+	Uint32 lastShootTime = 0;
+	Uint32 shootDelay = 500;
+	const Uint32 intialShootDelay = shootDelay;
 
 
 	Game* game; // needs to be a pointer to the game object. If its an object, it will create a new game object

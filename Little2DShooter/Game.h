@@ -83,9 +83,6 @@ private:
 	Uint32 lastMoveTime = 0;
 	const Uint32 moveDelay = 25;
 
-	Uint32 lastShootTime = 0;
-	const Uint32 shootDelay = 500;
-
 	Uint32 deadTime = 0;
 	Uint32 respawnTime = 500;
 

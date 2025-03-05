@@ -53,10 +53,13 @@ void Player::move(char direction) {
 
 }
 
-void Player::shoot(char direction, SDL_Texture* bullet_tex) {
-	Projectile projectile;
-	projectile.init(xpos, ypos, shotSize, max_x, max_y, direction, speed, bullet_tex);
-	game->projectiles.emplace_back(projectile);
+void Player::shoot(char direction, SDL_Texture* bullet_tex, Uint32 currentTime) {
+	if (currentTime - lastShootTime > shootDelay) {
+		Projectile projectile;
+		projectile.init(xpos, ypos, shotSize, max_x, max_y, direction, startSpeed, bullet_tex);
+		game->projectiles.emplace_back(projectile);
+		lastShootTime = currentTime;
+	}
 }
 
 void Player::update(Uint32 currentTime) {
@@ -89,6 +92,9 @@ void Player::update(Uint32 currentTime) {
 	}
 	if (shotCount == 1) {
 		shotSize = startShotSize;
+	}
+	if (shotSpeedCount == 1) {
+		shootDelay = intialShootDelay;
 	}
 
 	//TODO find a solution (the new powerup dissapears alongside the old)

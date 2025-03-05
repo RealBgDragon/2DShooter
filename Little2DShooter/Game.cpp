@@ -211,24 +211,20 @@ void Game::handleEvents() {
 			lastMoveTime = currentTime;
 		}
 	}
-	if (currentTime - lastShootTime > shootDelay) {
-		if (keystates[SDL_SCANCODE_UP]) {
-			player->shoot('u', bullet_tex);
-			lastShootTime = currentTime;
-		}
-		else if (keystates[SDL_SCANCODE_DOWN]) {
-			player->shoot('d', bullet_tex);
-			lastShootTime = currentTime;
-		}
-		else if (keystates[SDL_SCANCODE_LEFT]) {
-			player->shoot('l', bullet_tex);
-			lastShootTime = currentTime;
-		}
-		else if (keystates[SDL_SCANCODE_RIGHT]) {
-			player->shoot('r', bullet_tex);
-			lastShootTime = currentTime;
-		}
+
+	if (keystates[SDL_SCANCODE_UP]) {
+		player->shoot('u', bullet_tex, currentTime);
 	}
+	else if (keystates[SDL_SCANCODE_DOWN]) {
+		player->shoot('d', bullet_tex, currentTime);
+	}
+	else if (keystates[SDL_SCANCODE_LEFT]) {
+		player->shoot('l', bullet_tex, currentTime);
+	}
+	else if (keystates[SDL_SCANCODE_RIGHT]) {
+		player->shoot('r', bullet_tex, currentTime);
+	}
+
 }
 
 void Game::update() {
