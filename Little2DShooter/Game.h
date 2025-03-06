@@ -32,6 +32,8 @@ public:
 
 	void renderScore();
 
+	void renderFps();
+
 	static SDL_Renderer* renderer;
 
 	Player* player;
@@ -69,11 +71,14 @@ private:
 
 	SDL_Texture* player_tex;
 	SDL_Texture* bullet_tex;
+	SDL_Texture* backgroundTex;
 	std::map<std::string, SDL_Texture*> powerUpTextures;
 
 	TTF_Font* font;
 	SDL_Texture* scoreTexture;
+	SDL_Texture* fpsTexture;
 	SDL_Rect scoreRect;
+	SDL_Rect fpsRect;
 	int score = 0;
 
 	Uint32 frameStart;
@@ -96,10 +101,10 @@ private:
 
 	int width;
 	int height;
-	int speed = 16;
+	int speed = 32;
 	int enemyXStart = 0;
 	int enemyYStart = 0;
-	int size = 32;
+	int size = 64;
 
 	SDL_Window* window;
 

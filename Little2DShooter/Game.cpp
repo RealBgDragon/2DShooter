@@ -80,7 +80,6 @@ void Game::textureInit() {
 	bullet_tex = SDL_CreateTextureFromSurface(renderer, bullet_sur);
 	SDL_FreeSurface(bullet_sur);
 
-
 	SDL_Surface* tempSurface = IMG_Load("C:\\Users\\Martin\\Desktop\\Mycraft\\shot_size_powerup.png");
 	powerUpTextures["shot_size"] = SDL_CreateTextureFromSurface(renderer, tempSurface);
 	SDL_FreeSurface(tempSurface);
@@ -93,6 +92,9 @@ void Game::textureInit() {
 	powerUpTextures["shot_speed"] = SDL_CreateTextureFromSurface(renderer, tempSurface);
 	SDL_FreeSurface(tempSurface);
 
+	tempSurface = IMG_Load("C:\\Users\\Martin\\Desktop\\Mycraft\\background.png");
+	backgroundTex = SDL_CreateTextureFromSurface(renderer, tempSurface);
+	SDL_FreeSurface(tempSurface);
 }
 
 // Projectile hit registration
@@ -176,6 +178,38 @@ void Game::renderScore() {
 	scoreRect = { 10, 10, surface->w, surface->h }; // Position at (10,10)
 
 	SDL_FreeSurface(surface);
+}
+
+void Game::renderFps() {
+	frameCount++;
+	int currentTime = SDL_GetTicks();
+
+	if (currentTime > lastTime + 1000) {  // Update every second
+		if (fpsTexture) {  // Destroy old FPS texture
+			SDL_DestroyTexture(fpsTexture);
+			fpsTexture = nullptr;
+		}
+
+		SDL_Color white = { 255, 255, 255, 255 }; // White text
+		std::string fpsText = "FPS: " + std::to_string(frameCount);
+
+		SDL_Surface* surface = TTF_RenderText_Solid(font, fpsText.c_str(), white);
+		if (!surface) {
+			std::cout << "Failed to create surface: " << TTF_GetError() << std::endl;
+			return;
+		}
+
+		fpsTexture = SDL_CreateTextureFromSurface(renderer, surface);
+		if (!fpsTexture) {
+			std::cout << "Failed to create texture: " << SDL_GetError() << std::endl;
+		}
+
+		fpsRect = { 1920 - (surface->w + 10), 10, surface->w, surface->h }; // Position at top-right
+
+		SDL_FreeSurface(surface);
+		lastTime = currentTime;
+		frameCount = 0;
+	}
 }
 
 
@@ -270,6 +304,8 @@ void Game::render() {
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	SDL_RenderClear(renderer);
 
+	SDL_RenderCopy(renderer, backgroundTex, NULL, NULL);
+
 	if (isGameOver) {
 		if (!gameOverScreen) {
 			gameOverScreen = new GameOverScreen();
@@ -296,19 +332,15 @@ void Game::render() {
 			powerUp.draw();
 		}
 
-		renderScore(); // Render the score
+		renderScore();	// Render the score
 
 		if (scoreTexture) {
 			SDL_RenderCopy(renderer, scoreTexture, NULL, &scoreRect);
 		}
 
-		//frameCount++;
-		//int currentTime = SDL_GetTicks();
-		//if (currentTime > lastTime + 1000) {  // Update every second
-		//	std::cout << "FPS: " << frameCount << std::endl;
-		//	lastTime = currentTime;
-		//	frameCount = 0;
-		//}
+		renderFps();	// Render the fps
+		SDL_RenderCopy(renderer, fpsTexture, NULL, &fpsRect);
+
 	}
 	SDL_RenderPresent(renderer);
 }
@@ -341,6 +373,10 @@ void Game::clean() {
 	if (scoreTexture) {
 		SDL_DestroyTexture(scoreTexture);
 		scoreTexture = nullptr;
+	}
+	if (fpsTexture) {
+		SDL_DestroyTexture(fpsTexture);
+		fpsTexture = nullptr;
 	}
 	if (player_tex) {
 		SDL_DestroyTexture(player_tex);
