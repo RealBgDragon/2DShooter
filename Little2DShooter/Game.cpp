@@ -13,8 +13,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	this->width = width - 32;
 	this->height = height - 32;
 
-	int xstart = (width / 2) - ((width / 2) % size);
-	int ystart = (height / 2) - ((height / 2) % size);
+	xstart = (width / 2) - ((width / 2) % size);
+	ystart = (height / 2) - ((height / 2) % size);
 
 	do {
 		enemyXStart = (rand() % (width / size)) * size;
@@ -212,9 +212,26 @@ void Game::renderFps() {
 	}
 }
 
+// Function handling game restart
+void Game::restartGame(Uint32 currentTime) {
+	score = 0;
+	isGameOver = false;
+	restartTime = currentTime;	// for enemy ai delay
+	enemy->setX(enemyXStart);
+	enemy->setY(enemyYStart);
+	player->setX(xstart);
+	player->setY(ystart);
+	projectiles.clear();
+	powerUps.clear();
+	if (gameOverScreen) {
+		delete gameOverScreen; // Free gameOverScreen memory
+		gameOverScreen = nullptr;
+	}
+}
 
 void Game::handleEvents() {
 	SDL_Event event;
+	Uint32 currentTime = SDL_GetTicks();
 
 	while (SDL_PollEvent(&event)) {
 		if (event.type == SDL_QUIT) {
@@ -223,9 +240,11 @@ void Game::handleEvents() {
 		else if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {
 			isRunning = false;
 		}
+		if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_r) {
+			restartGame(currentTime);
+		}
 	}
 
-	Uint32 currentTime = SDL_GetTicks();
 	const Uint8* keystates = SDL_GetKeyboardState(NULL);
 	if (currentTime - lastMoveTime > moveDelay) {
 		if (keystates[SDL_SCANCODE_W]) {
@@ -267,12 +286,17 @@ void Game::update() {
 		Uint32 currentTime = SDL_GetTicks();
 		if (isEnemyAlive) {
 			if (hitReg(player, enemy)) {
+				if (score > highScore) {
+					highScore = score;
+				}
 				isGameOver = true;
 			}
 		}
 
 		if (isEnemyAlive) {
-			enemy->moveAi();	// Enemy movement ai
+			if (currentTime - restartTime > restartTimeout) {
+				enemy->moveAi();	// Enemy movement ai
+			}
 		}
 
 		projectileHitReg(currentTime);
@@ -309,7 +333,7 @@ void Game::render() {
 	if (isGameOver) {
 		if (!gameOverScreen) {
 			gameOverScreen = new GameOverScreen();
-			gameOverScreen->init(renderer, font, width, height);
+			gameOverScreen->init(renderer, font, width, height, highScore);
 		}
 		renderScore();
 		if (scoreTexture) {

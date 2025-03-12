@@ -20,6 +20,9 @@ public:
 	int getX() { return xpos; }
 	int getY() { return ypos; }
 
+	void setX(int newX) { xpos = newX; }
+	void setY(int newY) { ypos = newY; }
+
 	void setShotSize(int newSize) { shotSize = newSize; }
 
 	void setSpeed(int newSpeed) { speed = newSpeed; }

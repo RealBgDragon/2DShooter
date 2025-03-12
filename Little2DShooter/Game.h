@@ -64,6 +64,8 @@ public:
 
 	void powerUpHitReg();
 
+	void restartGame(Uint32 currentTime);
+
 private:
 	int cnt = 0;
 	bool isRunning;
@@ -95,6 +97,9 @@ private:
 	const Uint32 powerUpDelay = 5000;
 	const Uint32 powerUpLifetime = 5000;
 
+	Uint32 restartTime = 0;
+	const Uint32 restartTimeout = 500;
+
 	std::array<std::string, 3> powerUpTypes = { "shot_size", "player_speed", "shot_speed" };
 
 	bool isEnemyAlive = true;
@@ -104,7 +109,10 @@ private:
 	int speed = 32;
 	int enemyXStart = 0;
 	int enemyYStart = 0;
+	int xstart = 0;
+	int ystart = 0;
 	int size = 64;
+	int highScore = 0;
 
 	SDL_Window* window;
 
