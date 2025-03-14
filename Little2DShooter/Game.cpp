@@ -105,7 +105,6 @@ void Game::projectileHitReg(Uint32 currentTime) {
 
 			if (isEnemyAlive && hitReg(&(*it), enemy)) {
 				score++;
-				std::cout << "Score: " << score << std::endl;
 				isEnemyAlive = false;
 				delete enemy;  // Free enemy memory
 				enemy = nullptr;
@@ -129,7 +128,6 @@ void Game::powerUpHitReg() {
 		for (auto it = powerUps.begin(); it != powerUps.end(); ) {
 			if (hitReg(player, &(*it))) {
 				it->addEffect(player);
-				std::cout << "Power up collected" << std::endl;
 				it = powerUps.erase(it);  // Erase and get next valid iterator
 			}
 			else {
@@ -152,7 +150,6 @@ void Game::spawnPowerUp() {
 	powerUp.init(powerUpXStart, powerUpYStart, size, speed, powerUpType, powerUpTextures[powerUpType]);
 	powerUps.emplace_back(powerUp);
 
-	std::cout << "Creating power up at: " << powerUp.getX() << ", " << powerUp.getY() << std::endl;
 }
 
 // Score rendering
